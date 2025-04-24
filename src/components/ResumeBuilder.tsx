@@ -48,13 +48,22 @@ const ResumeBuilder: React.FC = () => {
     // Creamos un nuevo objeto jsPDF
     import('jspdf').then(({ default: jsPDF }) => {
       import('html2canvas').then(({ default: html2canvas }) => {
+        // Primero, aplicamos un estilo temporal para asegurar que el PDF tenga las dimensiones correctas
+        const originalStyle = element.getAttribute('style') || '';
+        element.setAttribute('style', `${originalStyle}; width: 794px !important; height: 1123px !important;`);
+
         // Configuración de html2canvas
         html2canvas(element, {
-          scale: 3, // Escala alta para mejor calidad
+          scale: 2, // Escala alta para mejor calidad
           useCORS: true,
           letterRendering: true,
-          logging: false
+          logging: false,
+          width: 794,
+          height: 1123
         }).then(canvas => {
+          // Restauramos el estilo original
+          element.setAttribute('style', originalStyle);
+
           // Creamos un nuevo PDF con el tamaño A4
           const pdf = new jsPDF({
             orientation: 'portrait',
@@ -65,7 +74,7 @@ const ResumeBuilder: React.FC = () => {
           // Obtenemos las dimensiones del canvas
           const imgData = canvas.toDataURL('image/png');
           const imgWidth = 210; // A4 width in mm
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          const imgHeight = 297; // A4 height in mm
 
           // Añadimos la imagen al PDF
           pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
@@ -104,11 +113,11 @@ const ResumeBuilder: React.FC = () => {
           <div className="bg-white rounded-lg shadow-md p-4 mb-4">
             <h2 className="text-xl font-bold text-[#071463] mb-3">Vista Previa</h2>
             <ErrorBoundary>
-              <div className="bg-gray-100 p-0 rounded overflow-auto" style={{ maxWidth: '100%' }}>
+              <div className="bg-gray-100 p-4 rounded" style={{ width: '100%' }}>
                 <div
                   ref={targetRef}
-                  className="mx-auto"
-                  style={{ width: 'fit-content' }}
+                  className="w-full"
+                  style={{ maxWidth: '100%' }}
                 >
                   <ResumePreview data={resumeData} />
                 </div>

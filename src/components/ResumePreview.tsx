@@ -27,11 +27,12 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-6 mx-auto overflow-hidden" style={{
+    <div className="bg-white p-6 mx-auto overflow-hidden shadow-sm" style={{
       boxSizing: 'border-box',
       width: '100%',
-      maxWidth: '794px',
-      minHeight: '1123px'
+      height: 'auto',
+      aspectRatio: '0.707',
+      minHeight: '500px'
     }}>
       {/* Header with personal info */}
       <header className="mb-6 relative">
