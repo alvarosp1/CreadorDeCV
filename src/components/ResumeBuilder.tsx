@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { usePDF } from 'react-to-pdf';
 import ResumeForm from './ResumeForm';
 import ResumePreview from './ResumePreview';
 import { ResumeData, emptyResumeData } from '../types/resume';
-import { Download, FileCheck, ZoomIn, ZoomOut } from 'lucide-react';
+import { Download, FileCheck } from 'lucide-react';
 
 interface Props {
   children: React.ReactNode;
@@ -38,29 +38,6 @@ class ErrorBoundary extends React.Component<Props, { hasError: boolean }> {
 const ResumeBuilder: React.FC = () => {
   const [resumeData, setResumeData] = useState<ResumeData>(emptyResumeData);
   const [pdfSize, setPdfSize] = useState<string>('A4');
-  const [previewScale, setPreviewScale] = useState<number>(0.7);
-
-  // Efecto para ajustar la escala de la vista previa según el tamaño de la ventana
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 640) { // Móvil pequeño
-        setPreviewScale(0.4);
-      } else if (width < 768) { // Móvil
-        setPreviewScale(0.5);
-      } else if (width < 1024) { // Tablet
-        setPreviewScale(0.6);
-      } else if (width < 1280) { // Laptop
-        setPreviewScale(0.7);
-      } else { // Desktop
-        setPreviewScale(0.8);
-      }
-    };
-
-    handleResize(); // Ajustar al cargar
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Función personalizada para generar el PDF con el tamaño correcto
   const generatePDF = () => {
@@ -117,43 +94,24 @@ const ResumeBuilder: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col xl:flex-row gap-6 mt-6">
-      <div className="xl:w-1/2 bg-white rounded-lg shadow-md p-6">
+    <div className="flex flex-col lg:flex-row gap-6 mt-6">
+      <div className="lg:w-1/2 bg-white rounded-lg shadow-md p-6">
         <ResumeForm data={resumeData} onChange={handleFormChange} />
       </div>
 
-      <div className="xl:w-1/2">
+      <div className="lg:w-1/2">
         <div className="sticky top-4">
           <div className="bg-white rounded-lg shadow-md p-4 mb-4">
             <h2 className="text-xl font-bold text-[#071463] mb-3">Vista Previa</h2>
             <ErrorBoundary>
-              <div className="bg-gray-100 p-0 rounded overflow-auto" style={{ maxWidth: '100%', maxHeight: '80vh' }}>
+              <div className="bg-gray-100 p-0 rounded overflow-auto" style={{ maxWidth: '100%' }}>
                 <div
                   ref={targetRef}
-                  style={{
-                    width: 'fit-content',
-                    '--resume-scale': previewScale
-                  } as React.CSSProperties}
+                  className="mx-auto"
+                  style={{ width: 'fit-content' }}
                 >
                   <ResumePreview data={resumeData} />
                 </div>
-              </div>
-
-              <div className="mt-3 flex items-center justify-between">
-                <div className="flex items-center">
-                  <ZoomOut size={16} className="text-gray-500" />
-                  <input
-                    type="range"
-                    min="0.3"
-                    max="1"
-                    step="0.1"
-                    value={previewScale}
-                    onChange={(e) => setPreviewScale(parseFloat(e.target.value))}
-                    className="mx-2 w-24 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                  />
-                  <ZoomIn size={16} className="text-gray-500" />
-                </div>
-                <span className="text-xs text-gray-500">{Math.round(previewScale * 100)}%</span>
               </div>
             </ErrorBoundary>
           </div>

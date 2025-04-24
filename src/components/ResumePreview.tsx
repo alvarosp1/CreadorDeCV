@@ -31,9 +31,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
       boxSizing: 'border-box',
       width: '100%',
       maxWidth: '794px',
-      minHeight: '1123px',
-      transform: 'scale(var(--resume-scale, 1))',
-      transformOrigin: 'top left'
+      minHeight: '1123px'
     }}>
       {/* Header with personal info */}
       <header className="mb-6 relative">
