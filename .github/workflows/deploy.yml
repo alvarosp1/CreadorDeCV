@@ -112,14 +112,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Create 404.html
-        run: cp dist/index.html dist/404.html
-
-      - name: Create .nojekyll file
-        run: touch dist/.nojekyll
+      - name: Prepare for deployment
+        run: |
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
+          ls -la dist/
 
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: dist
-          branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
