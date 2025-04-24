@@ -41,47 +41,86 @@ const ResumeBuilder: React.FC = () => {
 
   // Función personalizada para generar el PDF con el tamaño correcto
   const generatePDF = () => {
-    // Obtenemos el elemento que queremos convertir a PDF
+    // Vamos a usar el mismo componente de vista previa para el PDF
+    // pero con un estilo temporal para asegurar que tenga las dimensiones correctas
     const element = targetRef.current;
     if (!element) return;
 
     // Creamos un nuevo objeto jsPDF
     import('jspdf').then(({ default: jsPDF }) => {
       import('html2canvas').then(({ default: html2canvas }) => {
-        // Primero, aplicamos un estilo temporal para asegurar que el PDF tenga las dimensiones correctas
+        // Aplicamos un estilo temporal para asegurar que el PDF tenga las dimensiones correctas
         const originalStyle = element.getAttribute('style') || '';
-        element.setAttribute('style', `${originalStyle}; width: 794px !important; height: 1123px !important;`);
 
-        // Configuración de html2canvas
-        html2canvas(element, {
-          scale: 2, // Escala alta para mejor calidad
-          useCORS: true,
-          letterRendering: true,
-          logging: false,
-          width: 794,
-          height: 1123
-        }).then(canvas => {
-          // Restauramos el estilo original
-          element.setAttribute('style', originalStyle);
+        // Guardamos las clases originales para restaurarlas después
+        const originalClasses = element.className;
 
-          // Creamos un nuevo PDF con el tamaño A4
-          const pdf = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm',
-            format: 'a4'
+        // Aplicamos estilos temporales para el PDF
+        element.setAttribute('style', `${originalStyle}; width: 794px !important; height: 1123px !important; padding: 0 !important; margin: 0 !important; overflow: hidden !important;`);
+
+        // También aplicamos estilos al contenedor padre
+        const parentElement = element.parentElement;
+        let parentOriginalStyle = '';
+        if (parentElement) {
+          parentOriginalStyle = parentElement.getAttribute('style') || '';
+          parentElement.setAttribute('style', `${parentOriginalStyle}; padding: 0 !important; margin: 0 !important; width: 794px !important; height: 1123px !important;`);
+        }
+
+        // Añadimos una clase para el modo PDF que aumentará los tamaños de texto
+        const resumeElement = element.querySelector('.resume-preview');
+        if (resumeElement) {
+          resumeElement.classList.add('pdf-mode');
+        }
+
+        // Esperamos un momento para que los estilos se apliquen
+        setTimeout(() => {
+          // Configuración de html2canvas
+          html2canvas(element, {
+            scale: 2, // Escala alta para mejor calidad
+            useCORS: true,
+            letterRendering: true,
+            logging: true, // Activamos logging para depurar
+            width: 794,
+            height: 1123,
+            backgroundColor: '#ffffff',
+            windowWidth: 794,
+            windowHeight: 1123
+          }).then(canvas => {
+            // Restauramos el estilo original
+            element.setAttribute('style', originalStyle);
+            element.className = originalClasses;
+
+            // Restauramos el estilo del elemento padre
+            if (parentElement) {
+              parentElement.setAttribute('style', parentOriginalStyle || '');
+            }
+
+            // Quitamos la clase de modo PDF
+            if (resumeElement) {
+              resumeElement.classList.remove('pdf-mode');
+            }
+
+            // Creamos un nuevo PDF con el tamaño A4
+            const pdf = new jsPDF({
+              orientation: 'portrait',
+              unit: 'mm',
+              format: 'a4'
+            });
+
+            // Obtenemos las dimensiones del canvas
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = 210; // A4 width in mm
+            const imgHeight = 297; // A4 height in mm
+
+            // Añadimos la imagen al PDF
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+            // Guardamos el PDF
+            pdf.save(`${resumeData.personalInfo.name || 'resume'}.pdf`);
+          }).catch(error => {
+            console.error("Error al generar el canvas:", error);
           });
-
-          // Obtenemos las dimensiones del canvas
-          const imgData = canvas.toDataURL('image/png');
-          const imgWidth = 210; // A4 width in mm
-          const imgHeight = 297; // A4 height in mm
-
-          // Añadimos la imagen al PDF
-          pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-          // Guardamos el PDF
-          pdf.save(`${resumeData.personalInfo.name || 'resume'}.pdf`);
-        });
+        }, 100); // Pequeño retraso para asegurar que los estilos se apliquen
       });
     });
   };
@@ -117,7 +156,7 @@ const ResumeBuilder: React.FC = () => {
                 <div
                   ref={targetRef}
                   className="w-full"
-                  style={{ maxWidth: '100%' }}
+                  style={{ maxWidth: '100%', width: '100%' }}
                 >
                   <ResumePreview data={resumeData} />
                 </div>

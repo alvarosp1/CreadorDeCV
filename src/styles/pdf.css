@@ -1,0 +1,186 @@
+/* Estilos específicos para el modo PDF */
+.resume-preview.pdf-mode {
+  /* Eliminamos el padding para que el contenido ocupe todo el espacio */
+  padding: 0 !important;
+  font-size: 14px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  font-family: 'Arial', sans-serif !important;
+  line-height: 1.4 !important;
+}
+
+/* Encabezado */
+.resume-preview.pdf-mode header {
+  margin-bottom: 30px !important;
+  width: 100% !important;
+}
+
+.resume-preview.pdf-mode .bg-\[\#071463\] {
+  height: 150px !important;
+  margin: 0 !important;
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: 0 !important;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+}
+
+.resume-preview.pdf-mode header .relative {
+  padding-top: 35px !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+
+.resume-preview.pdf-mode h1 {
+  font-size: 30px !important;
+  margin-bottom: 8px !important;
+  letter-spacing: 0.8px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+}
+
+.resume-preview.pdf-mode h2 {
+  font-size: 18px !important;
+  margin-bottom: 18px !important;
+  letter-spacing: 0.3px !important;
+  color: #f2ae2b !important;
+  font-weight: 600 !important;
+}
+
+/* Información de contacto */
+.resume-preview.pdf-mode .flex.flex-wrap.items-center.gap-3 {
+  gap: 20px !important;
+  justify-content: flex-start !important;
+  margin-top: 10px !important;
+}
+
+.resume-preview.pdf-mode .text-xs {
+  font-size: 13px !important;
+  letter-spacing: 0.2px !important;
+}
+
+.resume-preview.pdf-mode .text-\[10px\] {
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}
+
+/* Contenido principal */
+.resume-preview.pdf-mode .pt-4 {
+  padding: 0 40px 40px 40px !important;
+  width: 100% !important;
+}
+
+/* Títulos de sección */
+.resume-preview.pdf-mode h3 {
+  font-size: 16px !important;
+  padding-bottom: 6px !important;
+  margin-bottom: 15px !important;
+  margin-top: 25px !important;
+  border-bottom-width: 2px !important;
+  border-bottom-color: #f2ae2b !important;
+  letter-spacing: 0.5px !important;
+  font-weight: 700 !important;
+  color: #071463 !important;
+  text-transform: uppercase !important;
+}
+
+.resume-preview.pdf-mode .mb-3 {
+  margin-bottom: 20px !important;
+}
+
+/* Experiencia y educación */
+.resume-preview.pdf-mode h4 {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-bottom: 3px !important;
+}
+
+.resume-preview.pdf-mode .space-y-2 {
+  margin-top: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 15px !important;
+}
+
+.resume-preview.pdf-mode .space-y-2 > div {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ajustes de márgenes */
+.resume-preview.pdf-mode .mr-1,
+.resume-preview.pdf-mode .mr-0\.5 {
+  margin-right: 6px !important;
+}
+
+.resume-preview.pdf-mode .mx-0\.5 {
+  margin-left: 4px !important;
+  margin-right: 4px !important;
+}
+
+.resume-preview.pdf-mode .mt-0\.5 {
+  margin-top: 4px !important;
+}
+
+/* Habilidades */
+.resume-preview.pdf-mode .gap-1\.5 {
+  gap: 15px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  margin-top: 10px !important;
+}
+
+.resume-preview.pdf-mode .rounded-full {
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
+  background-color: #f0f0f0 !important;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+.resume-preview.pdf-mode .w-0\.5.h-0\.5 {
+  width: 5px !important;
+  height: 5px !important;
+  margin: 0 1px !important;
+}
+
+/* Indicadores de nivel de habilidad */
+.resume-preview.pdf-mode .bg-\[\#071463\].w-0\.5.h-0\.5 {
+  background-color: #071463 !important;
+}
+
+.resume-preview.pdf-mode .bg-gray-300.w-0\.5.h-0\.5 {
+  background-color: #d1d5db !important;
+}
+
+.resume-preview.pdf-mode .ml-1 {
+  margin-left: 6px !important;
+}
+
+/* Ajustamos los tamaños de los iconos */
+.resume-preview.pdf-mode svg {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 5px !important;
+}
+
+/* Descripción de experiencia y educación */
+.resume-preview.pdf-mode p {
+  margin-top: 5px !important;
+  line-height: 1.5 !important;
+  color: #333 !important;
+}
+
+/* Ajustes específicos para la información de empresa/institución */
+.resume-preview.pdf-mode .flex.items-center.text-gray-600 {
+  margin-top: 2px !important;
+  color: #555 !important;
+}
+
+/* Fechas */
+.resume-preview.pdf-mode .text-\[10px\].text-gray-600.flex.items-center {
+  font-style: italic !important;
+  color: #555 !important;
+}

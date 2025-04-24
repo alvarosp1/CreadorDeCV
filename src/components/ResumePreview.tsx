@@ -27,42 +27,42 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
   };
 
   return (
-    <div className="bg-white p-6 mx-auto overflow-hidden shadow-sm" style={{
+    <div className="resume-preview bg-white p-4 mx-auto overflow-hidden shadow-sm" style={{
       boxSizing: 'border-box',
       width: '100%',
-      height: 'auto',
+      height: '100%',
       aspectRatio: '0.707',
       minHeight: '500px'
     }}>
       {/* Header with personal info */}
-      <header className="mb-6 relative">
-        <div className="bg-[#071463] absolute top-0 right-0 left-0 h-48 -mx-6 -mt-6"></div>
-        <div className="relative z-10 pt-6 px-4">
-          <h1 className="text-3xl font-bold text-white mb-1">
+      <header className="mb-3 relative w-full">
+        <div className="bg-[#071463] absolute top-0 right-0 left-0 h-32 -mx-4 -mt-4 w-full"></div>
+        <div className="relative z-10 pt-3 px-3 w-full">
+          <h1 className="text-xl font-bold text-white mb-0.5">
             {data.personalInfo.name || 'Tu Nombre Completo'}
           </h1>
-          <h2 className="text-[#f2ae2b] text-xl font-medium mb-4">
+          <h2 className="text-[#f2ae2b] text-base font-medium mb-2">
             {data.personalInfo.title || 'Tu Título Profesional'}
           </h2>
 
-          <div className="flex flex-wrap items-center gap-6 text-base text-white">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-white">
             {data.personalInfo.email && (
               <div className="flex items-center">
-                <Mail size={16} className="mr-2 text-white" />
+                <Mail size={10} className="mr-1 text-white" />
                 <span>{data.personalInfo.email}</span>
               </div>
             )}
 
             {data.personalInfo.phone && (
               <div className="flex items-center">
-                <Phone size={16} className="mr-2 text-white" />
+                <Phone size={10} className="mr-1 text-white" />
                 <span>{data.personalInfo.phone}</span>
               </div>
             )}
 
             {data.personalInfo.location && (
               <div className="flex items-center">
-                <MapPin size={16} className="mr-2 text-white" />
+                <MapPin size={10} className="mr-1 text-white" />
                 <span>{data.personalInfo.location}</span>
               </div>
             )}
@@ -70,32 +70,32 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
         </div>
       </header>
 
-      <div className="pt-8">
+      <div className="pt-4">
         {/* Summary */}
         {data.personalInfo.summary && (
-          <div className="mb-6">
-            <h3 className="text-[#071463] font-bold text-lg border-b-2 border-[#f2ae2b] pb-1 mb-2">Perfil Profesional</h3>
-            <p className="text-sm text-gray-700">{data.personalInfo.summary}</p>
+          <div className="mb-3">
+            <h3 className="text-[#071463] font-bold text-sm border-b border-[#f2ae2b] pb-0.5 mb-1">Perfil Profesional</h3>
+            <p className="text-[10px] text-gray-700">{data.personalInfo.summary}</p>
           </div>
         )}
 
         {/* Experience */}
         {data.experience.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-[#071463] font-bold text-lg border-b-2 border-[#f2ae2b] pb-1 mb-3">Experiencia Profesional</h3>
+          <div className="mb-3">
+            <h3 className="text-[#071463] font-bold text-sm border-b border-[#f2ae2b] pb-0.5 mb-1">Experiencia Profesional</h3>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {data.experience.map((exp, index) => (
-                <div key={index} className="pb-2">
+                <div key={index} className="pb-0.5">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-bold text-gray-800">{exp.position}</h4>
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <Building size={14} className="mr-1 text-[#071463]" />
+                      <h4 className="font-bold text-gray-800 text-xs">{exp.position}</h4>
+                      <div className="flex items-center text-gray-600 text-[10px]">
+                        <Building size={10} className="mr-0.5 text-[#071463]" />
                         <span>{exp.company}</span>
                         {exp.location && (
                           <>
-                            <span className="mx-1">|</span>
+                            <span className="mx-0.5">|</span>
                             <span>{exp.location}</span>
                           </>
                         )}
@@ -103,15 +103,15 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
                     </div>
 
                     {(exp.startDate || exp.endDate) && (
-                      <div className="text-sm text-gray-600 flex items-center">
-                        <Calendar size={14} className="mr-1 text-[#071463]" />
+                      <div className="text-[10px] text-gray-600 flex items-center">
+                        <Calendar size={10} className="mr-0.5 text-[#071463]" />
                         <span>{displayDate(exp.startDate, exp.endDate, exp.current)}</span>
                       </div>
                     )}
                   </div>
 
                   {exp.description && (
-                    <p className="text-sm text-gray-700 mt-1">{exp.description}</p>
+                    <p className="text-[10px] text-gray-700 mt-0.5">{exp.description}</p>
                   )}
                 </div>
               ))}
@@ -121,31 +121,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
 
         {/* Education */}
         {data.education.length > 0 && (
-          <div className="mb-6">
-            <h3 className="text-[#071463] font-bold text-lg border-b-2 border-[#f2ae2b] pb-1 mb-3">Educación</h3>
+          <div className="mb-3">
+            <h3 className="text-[#071463] font-bold text-sm border-b border-[#f2ae2b] pb-0.5 mb-1">Educación</h3>
 
-            <div className="space-y-4">
+            <div className="space-y-2">
               {data.education.map((edu, index) => (
-                <div key={index} className="pb-2">
+                <div key={index} className="pb-0.5">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-bold text-gray-800">{edu.degree} en {edu.fieldOfStudy}</h4>
-                      <div className="flex items-center text-gray-600 text-sm">
-                        <GraduationCap size={14} className="mr-1 text-[#071463]" />
+                      <h4 className="font-bold text-gray-800 text-xs">{edu.degree} en {edu.fieldOfStudy}</h4>
+                      <div className="flex items-center text-gray-600 text-[10px]">
+                        <GraduationCap size={10} className="mr-0.5 text-[#071463]" />
                         <span>{edu.institution}</span>
                       </div>
                     </div>
 
                     {(edu.startDate || edu.endDate) && (
-                      <div className="text-sm text-gray-600 flex items-center">
-                        <Calendar size={14} className="mr-1 text-[#071463]" />
+                      <div className="text-[10px] text-gray-600 flex items-center">
+                        <Calendar size={10} className="mr-0.5 text-[#071463]" />
                         <span>{displayDate(edu.startDate, edu.endDate)}</span>
                       </div>
                     )}
                   </div>
 
                   {edu.description && (
-                    <p className="text-sm text-gray-700 mt-1">{edu.description}</p>
+                    <p className="text-[10px] text-gray-700 mt-0.5">{edu.description}</p>
                   )}
                 </div>
               ))}
@@ -156,18 +156,18 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data }) => {
         {/* Skills */}
         {data.skills.length > 0 && (
           <div>
-            <h3 className="text-[#071463] font-bold text-lg border-b-2 border-[#f2ae2b] pb-1 mb-3">Habilidades</h3>
+            <h3 className="text-[#071463] font-bold text-sm border-b border-[#f2ae2b] pb-0.5 mb-1">Habilidades</h3>
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-1.5">
               {data.skills.map((skill, index) => (
-                <div key={index} className="bg-gray-100 rounded-full px-3 py-1">
+                <div key={index} className="bg-gray-100 rounded-full px-1.5 py-0.5">
                   <div className="flex items-center">
-                    <span className="text-sm font-medium">{skill.name}</span>
-                    <div className="ml-2 flex items-center">
+                    <span className="text-[10px] font-medium">{skill.name}</span>
+                    <div className="ml-1 flex items-center">
                       {[...Array(5)].map((_, i) => (
                         <div
                           key={i}
-                          className={`w-1.5 h-1.5 rounded-full mx-0.5 ${
+                          className={`w-0.5 h-0.5 rounded-full mx-0.5 ${
                             i < skill.level ? 'bg-[#071463]' : 'bg-gray-300'
                           }`}
                         />
