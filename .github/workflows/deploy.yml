@@ -1,0 +1,91 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fix vite build issues
+        run: |
+          npm install --save-dev @rollup/plugin-commonjs @rollup/plugin-node-resolve
+
+      - name: Update vite config
+        run: |
+          cat > vite.config.ts << 'EOL'
+          import { defineConfig } from 'vite';
+          import react from '@vitejs/plugin-react';
+          import { nodeResolve } from '@rollup/plugin-node-resolve';
+          import commonjs from '@rollup/plugin-commonjs';
+
+          export default defineConfig({
+            plugins: [
+              react(),
+              nodeResolve(),
+              commonjs()
+            ],
+            base: '/CreadorDeCV/',
+            define: {
+              'process.env': {},
+              global: 'window'
+            },
+            optimizeDeps: {
+              exclude: ['lucide-react'],
+              include: [
+                'jspdf',
+                'html2canvas',
+                'canvg'
+              ]
+            },
+            build: {
+              commonjsOptions: {
+                include: [/lucide-react/, /node_modules/],
+                transformMixedEsModules: true
+              },
+              outDir: 'dist',
+              emptyOutDir: true,
+              rollupOptions: {
+                output: {
+                  manualChunks: {
+                    vendor: ['react', 'react-dom'],
+                    pdf: ['jspdf', 'html2canvas']
+                  }
+                }
+              }
+            },
+            assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp'],
+            server: {
+              headers: {
+                'Cross-Origin-Embedder-Policy': 'require-corp',
+                'Cross-Origin-Opener-Policy': 'same-origin',
+              },
+            }
+          });
+          EOL
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
