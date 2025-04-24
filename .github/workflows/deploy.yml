@@ -2,125 +2,67 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: "18"
           cache: 'npm'
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Fix vite build issues
-        run: |
-          npm install --save-dev @rollup/plugin-commonjs @rollup/plugin-node-resolve
-          npm install core-js@3.30.2 --save-exact
-          npm install jspdf@2.5.1 --save-exact
-          npm install terser --save-dev
-
-      - name: Update vite config
+      - name: Update vite.config.ts
         run: |
           cat > vite.config.ts << 'EOL'
           import { defineConfig } from 'vite';
           import react from '@vitejs/plugin-react';
-          import { nodeResolve } from '@rollup/plugin-node-resolve';
-          import commonjs from '@rollup/plugin-commonjs';
 
           export default defineConfig({
-            plugins: [
-              react(),
-              nodeResolve({
-                preferBuiltins: false,
-                browser: true
-              }),
-              commonjs({
-                transformMixedEsModules: true,
-                include: [/node_modules/]
-              })
-            ],
+            plugins: [react()],
             base: '/CreadorDeCV/',
-            define: {
-              'process.env': {},
-              global: 'window'
-            },
-            optimizeDeps: {
-              exclude: ['lucide-react'],
-              include: [
-                'jspdf',
-                'html2canvas',
-                'canvg'
-              ],
-              esbuildOptions: {
-                target: 'es2020'
-              }
-            },
             build: {
-              commonjsOptions: {
-                include: [/lucide-react/, /node_modules/],
-                transformMixedEsModules: true
-              },
-              outDir: 'dist',
-              emptyOutDir: true,
-              target: 'es2015',
-              minify: 'terser',
-              terserOptions: {
-                compress: {
-                  drop_console: false,
-                  drop_debugger: true
-                }
-              },
-              rollupOptions: {
-                external: [],
-                output: {
-                  manualChunks: (id) => {
-                    if (id.includes('node_modules')) {
-                      if (id.includes('react') || id.includes('react-dom')) {
-                        return 'vendor-react';
-                      }
-                      if (id.includes('jspdf') || id.includes('html2canvas')) {
-                        return 'vendor-pdf';
-                      }
-                      return 'vendor';
-                    }
-                  }
-                }
-              }
-            },
-            assetsInclude: ['**/*.svg', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.gif', '**/*.webp'],
-            server: {
-              headers: {
-                'Cross-Origin-Embedder-Policy': 'require-corp',
-                'Cross-Origin-Opener-Policy': 'same-origin',
-              },
+              outDir: '_site'
             }
           });
           EOL
 
-      - name: Build
+      - name: Build with Vite
         run: npm run build
 
-      - name: Prepare for deployment
-        run: |
-          cp dist/index.html dist/404.html
-          touch dist/.nojekyll
-          ls -la dist/
-
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          force_orphan: true
+          path: "_site"
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
